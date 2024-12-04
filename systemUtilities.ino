@@ -54,10 +54,10 @@ void printLCD(){
 
 
 void partUpperLCD(){
-  lcd.setCursor(13,0);
-  lcd.print("       ");
+  lcd.setCursor(6,0);
+  lcd.print("                ");
   lcd.setCursor(0,0);
-  lcd.print("CAPTEUR ");
+  lcd.print("CAPT ");
  
   lcd.print(capteurCurseur+1);
   lcd.print(": ");
@@ -65,37 +65,37 @@ void partUpperLCD(){
   lcd.print(tabTemperature[capteurCurseur],1);
   lcd.write(byte(0));
   lcd.print("C");
-
+// flags
   switch(capteurCurseur){
     case 0: // capteur 1
      if(capteur1.flag){
-         lcd.setCursor(17,0);
+         lcd.setCursor(LCD_COLS-1,0);
          lcd.print("!!");
   }
   else{
-      lcd.setCursor(17,0);
+      lcd.setCursor(LCD_COLS-1,0);
         lcd.print("  ");
   }
   break;
 
     case 1: // capteur 1
      if(capteur2.flag){
-         lcd.setCursor(17,0);
+         lcd.setCursor(LCD_COLS-1,0);
          lcd.print("!!");
   }
   else{
-      lcd.setCursor(17,0);
+      lcd.setCursor(LCD_COLS-1,0);
         lcd.print("  ");
   }
   break;
 
     case 2: // capteur 1
      if(capteur3.flag){
-         lcd.setCursor(17,0);
+         lcd.setCursor(LCD_COLS-1,0);
          lcd.print("!!");
   }
   else{
-      lcd.setCursor(17,0);
+      lcd.setCursor(LCD_COLS-1,0);
         lcd.print("  ");
   }
   break;
@@ -109,19 +109,20 @@ void partUpperLCD(){
 }
 
 void partLowerLCD(){
-   
+   /*
    lcd.setCursor(0,2);
 
-   lcd.print("CONFIG TEMP: ");
+   lcd.print("CONF TEMP: ");
    lcd.print(mainSystem.targetTemperature,1);
   lcd.write(byte(0));
   lcd.print("C");
     lcd.setCursor(0,3);
-   lcd.print("CONFIG EPS:  ");
+   lcd.print("CONF EPS:  ");
    lcd.write(byte(1));
    lcd.print(mainSystem.epsTemperature,1);
   lcd.write(byte(0));
   lcd.print("C");
+  */
 }
 
 
@@ -155,8 +156,8 @@ void updateCurseurCapteur(){
 
 void checkButton1(){
 
-
-  if(digitalRead(pinButton2)){
+   if(!digitalRead(pinButtonEncoder)){
+  //if(digitalRead(pinButton2) || !digitalRead(pinButtonEncoder)){
     //mainSystem.button1High = mainSystem.button1High;
     updateCurseurConfig();
   }
@@ -195,28 +196,51 @@ void handleCursorCapteur(){
 
 void checkSlider(){
 
-    lcd.setCursor(19,2);
+    lcd.setCursor(LCD_COLS-1,2);
     lcd.print("<");
-    lcd.setCursor(19,3);
+    lcd.setCursor(LCD_COLS-1,3);
     lcd.print(" ");
   // lcd.setCursor(17,2);
   // lcd.print("               ");
  
   switch(configCurseur){
+
+
+
+
     case 0: // temp des
+     lcd.setCursor(7,2);
+     lcd.print("       ");
+    lcd.setCursor(0,2);
+    lcd.print("TDES: ");
+    lcd.print(mainSystem.targetTemperature,1);
+    lcd.write(byte(0));
+    lcd.print("C");
+    
+    
+    
+    
+    
+    lcd.setCursor(LCD_COLS-1,3);
+   lcd.print(" ");
+    lcd.setCursor(LCD_COLS-1,2);
+     lcd.print("<");
+   break;
 
- lcd.setCursor(19,3);
+
+
+  case 1: // EPS DES
+   lcd.setCursor(7,2);
+     lcd.print("       ");
+    lcd.setCursor(0,2);
+   lcd.print("DEPS:  ");
+   lcd.write(byte(1));
+   lcd.print(mainSystem.epsTemperature,1);
+  lcd.write(byte(0));
+  lcd.print("C");
+  lcd.setCursor(LCD_COLS-1,2);
   lcd.print(" ");
-    lcd.setCursor(19,2);
-  lcd.print("<");
- break;
-
-
-
-  case 1:
-  lcd.setCursor(19,2);
-  lcd.print(" ");
-    lcd.setCursor(19,3);
+    lcd.setCursor(LCD_COLS-1,3);
   lcd.print("<");
   //lcd.setCursor(17,3);
    //lcd.print("               ");
@@ -229,9 +253,9 @@ void checkSlider(){
 capteur1.hysteresisStatusHigh = false;
 capteur2.hysteresisStatusHigh = false;
 capteur3.hysteresisStatusHigh = false;
- lcd.setCursor(19,2);
+ lcd.setCursor(LCD_COLS-1,2);
   lcd.print(" ");
-   lcd.setCursor(19,3);
+   lcd.setCursor(LCD_COLS-1,3);
   lcd.print(" ");
   configCurseur = 0;
  // Serial.print(" Done config");
@@ -246,11 +270,6 @@ capteur3.hysteresisStatusHigh = false;
 
 
 
-
-
-
-
-
 void checkPotentiometer(){
    
  int currentClkState = digitalRead(clkPin);
@@ -259,9 +278,9 @@ void checkPotentiometer(){
   if (currentClkState != lastClkState) {
     // Determine the direction based on the state of DT
     if (digitalRead(dtPin) != currentClkState) {
-      encoderPosition = -1;
+      encoderPosition = -1*signeEncoder;
     } else {
-      encoderPosition = 1;
+      encoderPosition = 1*signeEncoder;
     }
     
     // Print the encoder position
@@ -301,33 +320,30 @@ void handleUpdateData(){ // donnees a certains Hz
 
 void updateTemperature(){
     switch(configCurseur){
-    case 0:
+      case 0:
 
-  mainSystem.targetTemperature += encoderPosition*stepTemperatureConfig;
- encoderPosition = 0;
-  if(mainSystem.targetTemperature >=maxTemperatureConfig){
-    mainSystem.targetTemperature =maxTemperatureConfig;
-  }
-    if(mainSystem.targetTemperature <=minTemperatureConfig){
-    mainSystem.targetTemperature =minTemperatureConfig;
-  }
-  
+        mainSystem.targetTemperature += encoderPosition*stepTemperatureConfig;
+        encoderPosition = 0;
+        if(mainSystem.targetTemperature >=maxTemperatureConfig){
+          mainSystem.targetTemperature =maxTemperatureConfig;
+          }
+        if(mainSystem.targetTemperature <=minTemperatureConfig){
+          mainSystem.targetTemperature =minTemperatureConfig;
+        }
 
-    break;
+      break;
 
-  case 1:
-mainSystem.epsTemperature += encoderPosition*stepEpsConfig;
- encoderPosition = 0;
+      case 1:
+        mainSystem.epsTemperature += encoderPosition*stepEpsConfig;
+        encoderPosition = 0;
 
+      if(mainSystem.epsTemperature >=maxEpsConfig){
+        mainSystem.epsTemperature =maxEpsConfig;
+      }
+      if(mainSystem.epsTemperature <=minEpsConfig){
+        mainSystem.epsTemperature = minEpsConfig;
+      }
+      break;
 
-  
-  if(mainSystem.epsTemperature >=maxEpsConfig){
-    mainSystem.epsTemperature =maxEpsConfig;
-  }
-    if(mainSystem.epsTemperature <=minEpsConfig){
-    mainSystem.epsTemperature = minEpsConfig;
-  }
-break;
-
-}
+    }
 }

@@ -37,12 +37,12 @@ void readSensor1(){
 
 void readSensor3(){
   
-  float midT = dht3.readTemperature();
+  float midT = sht31.readTemperature();//dht3.readTemperature();
   capteur3.temperature = (isnan(midT) ? capteur3.temperature : midT);
    capteur3.flag = (isnan(midT) ? true : false);
    
 
-  midT =  dht3.readHumidity();
+  midT =  sht31.readHumidity();//dht3.readHumidity();
   capteur3.humidite = (isnan(midT) ?  capteur3.humidite  : midT);
  
      capteur3.flag = (isnan(midT) ? true : false);

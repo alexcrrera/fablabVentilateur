@@ -53,7 +53,8 @@ void getPrint() {
 
  
   Serial.print("\n");
-  printSingle("Temperature glob",temperatureGlobal);
+  //printSingle("Temperature glob",temperatureGlobal);
+  //printSingle("Boutton",digitalRead(pinButton2));
   //printSingle("Temperature i", capteur1.temperature);
   printGroup("Temperature",capteur1.temperature,capteur2.temperature,capteur3.temperature);
   printGroup("Ventilateurs",capteur1.fanOn,capteur2.fanOn,capteur3.fanOn);
@@ -70,7 +71,7 @@ void getPrint() {
     printSingle("Menu",configCurseur);
 //printSingle("STATE ENCODER",previo;usStateButtonEncoder);
    // printSingle("Button",  capteurCurseur);
-   // printSingle("r",digitalRead(pinButtonEncoder));
+    printSingle("Encoder: ",digitalRead(pinButtonEncoder));
 
     //printSingle("Rot",encoderPosition);
   

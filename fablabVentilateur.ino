@@ -1,15 +1,17 @@
 /// LIBRARIES
 bool buttonEncoder = false;
 bool previousStateButtonEncoder = false;
-const int pinButtonEncoder = 12;
+const int pinButtonEncoder = 4;
 
+
+const int signeEncoder = -1;
 const int NCAPTEURS = 3;
 int capteurCurseur = 0;
-const int pinButton1 = 7;
+//const int pinButton1 = 7;
 
  int configCurseur = 0;
  const int TAILLECONFIG = 3;
-const int pinButton2 = 11;
+//const int pinButton2 = 7;
 
 
 float TdesDefault = 30;
@@ -48,8 +50,8 @@ byte circ[8] = {
 };
 
 
-const int clkPin = 4;    // CLK pin (connect to Arduino pin 2)
-const int dtPin = 3;     // DT pin (connect to Arduino pin 3)
+const int clkPin = 3;    // CLK pin (connect to Arduino pin 2)
+const int dtPin = 2;     // DT pin (connect to Arduino pin 3)
 const int swPin = 12;     // SW pin (connect to Arduino pin 4)
 
 float stepTemperatureConfig = 0.5;
@@ -83,23 +85,28 @@ int PRINTFREQUENCY = 10; // en Hz
 
 float CAPTEURCURSORFREQUENCY = 1/1.5;
 #include <DHT.h>
-#include <LiquidCrystal_I2C.h>
+//#include <LiquidCrystal_I2C.h>
 
 // GLOBAL VAR
+#include <Adafruit_SHT31.h>
+#include <Adafruit_MLX90614.h>
+Adafruit_SHT31 sht31 = Adafruit_SHT31();
+#define I2C_ADDR 0x3E
 
-#define I2C_ADDR 0x27
+#define LCD_ROWS 2
+#define LCD_COLS 16
 
-#define LCD_ROWS 4
-#define LCD_COLS 20
+#include <Wire.h>
+#include "rgb_lcd.h"
 
-
-LiquidCrystal_I2C lcd(I2C_ADDR, LCD_COLS, LCD_ROWS);
+rgb_lcd lcd;
+//LiquidCrystal_I2C lcd(I2C_ADDR, LCD_COLS, LCD_ROWS);
 
 bool PLOTMODE = false;
 #define DHTPIN 2 
-#define CAPT1PIN 2
-#define CAPT2PIN 5
-#define CAPT3PIN 6
+#define CAPT1PIN 5
+#define CAPT2PIN 3
+#define CAPT3PIN 4
 #define DHTTYPE1 DHT22 
 #define DHTTYPE2 DHT21  
 #define DHTTYPE3 DHT21  
@@ -113,9 +120,9 @@ float TEMPERATURELOWPOINT = 0;
 
 
 
-const int fan1Pin = 8;
-const int fan2Pin = 9;
-const int fan3Pin = 10;
+const int fan1Pin = 7;
+const int fan2Pin = 8;
+const int fan3Pin = 9;
 
 float temperatureGlobal = 20; // moyenne valeur - set point pour moyenneur
 

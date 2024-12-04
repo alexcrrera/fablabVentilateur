@@ -5,18 +5,19 @@ void setup(){
   Serial.begin(115200);
   Serial.println("test");
   delay(100);
-  lcd.init();
-  pinMode(pinButton2,INPUT);
+  sht31.begin(0x45);
+  lcd.begin(LCD_COLS, LCD_ROWS);
+  //pinMode(pinButton2,INPUT);
   pinMode(clkPin, INPUT);
   pinMode(dtPin, INPUT);
   pinMode(swPin, INPUT_PULLUP); // Use internal pull-up resistor for the button
- lcd.createChar(0, degree); 
+  lcd.createChar(0, degree); 
   lcd.createChar(1, pminus); 
- pinMode(pinButton1,INPUT);
- pinMode(pinButtonEncoder,INPUT);
+// pinMode(pinButton1,INPUT);
+  pinMode(pinButtonEncoder,INPUT);
   // Read the initial state of CLK
    lastClkState = digitalRead(clkPin);
-   lcd.backlight();
+   //lcd.backlight();
   //Wire.begin();
   pinMode(fan1Pin,OUTPUT);
 //pinMode(A5,INPUT);
