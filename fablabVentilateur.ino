@@ -1,7 +1,54 @@
+#include <SPI.h>
+#include <SD.h>
+
+const int chipSelect = 4; // Chip select pin for the SD card
+const int N = 2;          // Number of variables to manage
+float donneesSD[N] = {15.0,2.5};       // Array to store the parsed donneesSD
+
+
 /// LIBRARIES
+
+#include <DHT.h>
+//#include <LiquidCrystal_I2C.h>
+
+// GLOBAL VAR
+#include <Adafruit_SHT31.h>
+#include <Adafruit_MLX90614.h>
+Adafruit_SHT31 sht31 = Adafruit_SHT31();
+#define I2C_ADDR 0x3E
+
+#define LCD_ROWS 2
+#define LCD_COLS 16
+
+#include <Wire.h>
+#include "rgb_lcd.h"
+
+rgb_lcd lcd;
+
 bool buttonEncoder = false;
 bool previousStateButtonEncoder = false;
-const int pinButtonEncoder = 4;
+const int pinButtonEncoder = 5;
+
+#define DHTPIN 2 
+#define CAPT1PIN 6
+#define CAPT2PIN 3
+#define CAPT3PIN 6
+#define DHTTYPE1 DHT22 
+#define DHTTYPE2 DHT21  
+#define DHTTYPE3 DHT21  
+DHT dht1(CAPT1PIN, DHTTYPE1);
+DHT dht2(CAPT2PIN, DHTTYPE2);
+DHT dht3(CAPT3PIN, DHTTYPE3);
+const int clkPin = 3;    // CLK pin (connect to Arduino pin 2)
+const int dtPin = 2;     // DT pin (connect to Arduino pin 3)
+const int swPin = 12;     // SW pin (connect to Arduino pin 4)
+
+
+
+
+
+
+
 
 
 const int signeEncoder = -1;
@@ -16,6 +63,12 @@ int capteurCurseur = 0;
 
 float TdesDefault = 30;
 float TdesEps = 15; 
+
+
+
+
+
+
 
 
 byte degree[8] = {
@@ -50,9 +103,6 @@ byte circ[8] = {
 };
 
 
-const int clkPin = 3;    // CLK pin (connect to Arduino pin 2)
-const int dtPin = 2;     // DT pin (connect to Arduino pin 3)
-const int swPin = 12;     // SW pin (connect to Arduino pin 4)
 
 float stepTemperatureConfig = 0.5;
 float stepEpsConfig = 0.1;
@@ -84,35 +134,10 @@ const int TEMPERATUREFREQUENCY = 2; // in Hz
 int PRINTFREQUENCY = 10; // en Hz
 
 float CAPTEURCURSORFREQUENCY = 1/1.5;
-#include <DHT.h>
-//#include <LiquidCrystal_I2C.h>
 
-// GLOBAL VAR
-#include <Adafruit_SHT31.h>
-#include <Adafruit_MLX90614.h>
-Adafruit_SHT31 sht31 = Adafruit_SHT31();
-#define I2C_ADDR 0x3E
-
-#define LCD_ROWS 2
-#define LCD_COLS 16
-
-#include <Wire.h>
-#include "rgb_lcd.h"
-
-rgb_lcd lcd;
 //LiquidCrystal_I2C lcd(I2C_ADDR, LCD_COLS, LCD_ROWS);
 
 bool PLOTMODE = false;
-#define DHTPIN 2 
-#define CAPT1PIN 5
-#define CAPT2PIN 3
-#define CAPT3PIN 4
-#define DHTTYPE1 DHT22 
-#define DHTTYPE2 DHT21  
-#define DHTTYPE3 DHT21  
-DHT dht1(CAPT1PIN, DHTTYPE1);
-DHT dht2(CAPT2PIN, DHTTYPE2);
-DHT dht3(CAPT3PIN, DHTTYPE3);
 
 
 float TEMPERATUREHIGHPOINT = 100;
