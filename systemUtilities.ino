@@ -144,6 +144,10 @@ void updateCurseurConfig(){
     encoderPosition = 0;
     if(configCurseur > TAILLECONFIG-1){
       configCurseur = 0;
+      //updateParaData();
+
+      delay(1000);
+      Serial.println("laaaaaaaaa");
     }
 }
 
@@ -151,6 +155,7 @@ void updateCurseurCapteur(){
     capteurCurseur++;
     if(capteurCurseur > NCAPTEURS-1){
       capteurCurseur = 0;
+      
     }
 }
 
@@ -175,8 +180,6 @@ void handleSlider(){
   checkSlider();
   }
 }
-
-
 
 
 unsigned long timeCursorCapteur = 0;;
@@ -250,6 +253,7 @@ void checkSlider(){
   break;
 
   case 2:
+  updateParaData();
 capteur1.hysteresisStatusHigh = false;
 capteur2.hysteresisStatusHigh = false;
 capteur3.hysteresisStatusHigh = false;

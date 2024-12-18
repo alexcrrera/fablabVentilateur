@@ -1,12 +1,32 @@
 #include <SPI.h>
 #include <SD.h>
 
+#include <EEPROM.h>
+
+const int numFloats = 4;
+float randomFloats[numFloats];
+
+File dataFile;
+File paraFile;
 const int chipSelect = 4; // Chip select pin for the SD card
-const int N = 2;          // Number of variables to manage
-float donneesSD[N] = {15.0,2.5};       // Array to store the parsed donneesSD
+        // Number of variables to manage
+float donneesSD[] = {30,3};       // Array to store the parsed donneesSD
 
 
-/// LIBRARIES
+const int sdN =2;//(sizeof(donneesSD) / (donneesSD[0]));
+const int eepromStartAddress = 10;
+
+// const char *filenameDonnees = "donneesOut.csv"; // Nom du fichier à vérifier
+
+
+
+const int N = 5;//round(sizeof(donneesSD) / (donneesSD[0])); // Taille du tableau
+
+float parameters[N];
+
+
+  const char *filenamePara = "parametresSysteme.csv"; // Nom du fichier à vérifier
+
 
 #include <DHT.h>
 //#include <LiquidCrystal_I2C.h>
@@ -29,7 +49,7 @@ bool buttonEncoder = false;
 bool previousStateButtonEncoder = false;
 const int pinButtonEncoder = 5;
 
-#define DHTPIN 2 
+
 #define CAPT1PIN 6
 #define CAPT2PIN 3
 #define CAPT3PIN 6
@@ -41,7 +61,6 @@ DHT dht2(CAPT2PIN, DHTTYPE2);
 DHT dht3(CAPT3PIN, DHTTYPE3);
 const int clkPin = 3;    // CLK pin (connect to Arduino pin 2)
 const int dtPin = 2;     // DT pin (connect to Arduino pin 3)
-const int swPin = 12;     // SW pin (connect to Arduino pin 4)
 
 
 
@@ -63,10 +82,6 @@ int capteurCurseur = 0;
 
 float TdesDefault = 30;
 float TdesEps = 15; 
-
-
-
-
 
 
 
@@ -129,7 +144,7 @@ const int pinSlider1 = A0;
 const int POTENTIOMETERFREQUENCY = 5000;
 const int SLIDERFREQUENCY = 10;
 const int BUTTON1FREQUENCY = 5;
-const int LCDFREQUENCY = 3;
+const int LCDFREQUENCY = 2;
 const int TEMPERATUREFREQUENCY = 2; // in Hz
 int PRINTFREQUENCY = 10; // en Hz
 
