@@ -1,3 +1,13 @@
+
+void globalTemperature(){
+
+  float w = 0.1;
+
+  temperatureGlobal = w * capteur1.temperature + (1-w)*temperatureGlobal;
+}
+
+
+
 unsigned long timePrint = 0;
 
 
@@ -20,8 +30,8 @@ void handleCommands(){
 
 void handlePrint(){ //
   
-  if((micros()-timePrint)*1.0>=1000.0*1000/PRINTFREQUENCY){
-    timePrint = micros();
+  if((millis()-timePrint)*1.0>=1000.0*1000/PRINTFREQUENCY){
+    timePrint = millis();
     getPrint(); 
   }
 }

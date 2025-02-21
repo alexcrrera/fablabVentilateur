@@ -53,13 +53,6 @@ bool checkTemperatureSurpassedCapteur3(){
 
 
 
-
-
-
-
-
-
-
 void configSetPointsTemp(){
 
  TEMPERATUREHIGHPOINT = mainSystem.targetTemperature + mainSystem.epsTemperature;

@@ -10,9 +10,12 @@ void handleTemperature(){ // donnees a certains Hz
     readSensor1(); readSensor2();readSensor3();
     globalTemperature(); // updates temperature avec filtre
     configSetPointsTemp();
-     tabTemperature[0] =  capteur1.temperature;
-   tabTemperature[1] =  capteur2.temperature;
+    tabTemperature[0] =  capteur1.temperature;
+    tabTemperature[1] =  capteur2.temperature;
     tabTemperature[2] =  capteur3.temperature;
+    tabHumidite[0] = capteur1.humidite;
+    tabHumidite[1] = capteur2.humidite;
+    tabHumidite[2] = capteur3.humidite;
   }
 
 }

@@ -25,7 +25,7 @@ void handleFans(){
 
   digitalWrite(fan1Pin,capteur1.fanOn);
   digitalWrite(fan2Pin,capteur2.fanOn);
-   digitalWrite(fan3Pin,capteur3.fanOn);
+  digitalWrite(fan3Pin,capteur3.fanOn);
  
 }
 unsigned long timeLCD = 0;
@@ -44,7 +44,6 @@ void printLCD(){
   
 
   partUpperLCD();
-  partLowerLCD();
 
 
 
@@ -108,32 +107,26 @@ void partUpperLCD(){
 
 }
 
-void partLowerLCD(){
-   /*
-   lcd.setCursor(0,2);
-
-   lcd.print("CONF TEMP: ");
-   lcd.print(mainSystem.targetTemperature,1);
-  lcd.write(byte(0));
-  lcd.print("C");
-    lcd.setCursor(0,3);
-   lcd.print("CONF EPS:  ");
-   lcd.write(byte(1));
-   lcd.print(mainSystem.epsTemperature,1);
-  lcd.write(byte(0));
-  lcd.print("C");
-  */
-}
-
 
 unsigned long timePotentiometer;
 
 
 void handlePotentiometer(){ // donnees a certains Hz
   
-  if((millis()-timePotentiometer)*1.0>=1000.0/POTENTIOMETERFREQUENCY){
+  if(fabs((millis()-timePotentiometer)*1.0)>=1000.0/POTENTIOMETERFREQUENCY){
     timePotentiometer = millis();
   checkPotentiometer();
+  }
+
+}
+
+unsigned long timeLogBook;
+
+void handleLogBook(){ // donnees a certains Hz
+  
+  if(fabs((millis()-timeLogBook)*1.0)>=1000.0/SDDATALOGFREQUENCY){
+    timeLogBook = millis();
+    LogBook();
   }
 
 }
@@ -151,8 +144,8 @@ void updateCurseurConfig(){
     }
 }
 
-void updateCurseurCapteur(){
-    capteurCurseur++;
+void updateCurseurCapteur() {
+  capteurCurseur++;
     if(capteurCurseur > NCAPTEURS-1){
       capteurCurseur = 0;
       
@@ -162,8 +155,7 @@ void updateCurseurCapteur(){
 void checkButton1(){
 
    if(!digitalRead(pinButtonEncoder)){
-  //if(digitalRead(pinButton2) || !digitalRead(pinButtonEncoder)){
-    //mainSystem.button1High = mainSystem.button1High;
+    //Serial.println("ENCODER");
     updateCurseurConfig();
   }
   
@@ -173,7 +165,7 @@ unsigned long timeSlider = 0;;
 
 
 void handleSlider(){
-    if((millis()-timeSlider)*1.0>=1000.0/SLIDERFREQUENCY){
+    if(fabs((millis()-timeSlider)*1.0)>=1000.0/SLIDERFREQUENCY){
     timeSlider = millis();
   //checkPotentiometer();
 
@@ -186,11 +178,10 @@ unsigned long timeCursorCapteur = 0;;
 
 
 void handleCursorCapteur(){
-    if((millis()-timeCursorCapteur)*1.0>=1000.0/CAPTEURCURSORFREQUENCY){
+    if(fabs((millis()-timeCursorCapteur)*1.0)>=1000.0/CAPTEURCURSORFREQUENCY){
     timeCursorCapteur = millis();
-  //checkPotentiometer();
 
-  updateCurseurCapteur();
+    updateCurseurCapteur();
   }
 }
 
@@ -253,6 +244,8 @@ void checkSlider(){
   break;
 
   case 2:
+  EEPROMDATA[1] = mainSystem.epsTemperature;
+  EEPROMDATA[0] = mainSystem.targetTemperature;
   updateParaData();
 capteur1.hysteresisStatusHigh = false;
 capteur2.hysteresisStatusHigh = false;
@@ -262,7 +255,7 @@ capteur3.hysteresisStatusHigh = false;
    lcd.setCursor(LCD_COLS-1,3);
   lcd.print(" ");
   configCurseur = 0;
- // Serial.print(" Done config");
+ Serial.print(" Done config");
   default:
   break;
   }
@@ -301,9 +294,6 @@ void checkPotentiometer(){
   // Print the button state
  // Serial.print("Button State: ");
 
-  
-  // Add a small delay to avoid flooding the Serial Monitor
-
 
 
 }
@@ -315,7 +305,7 @@ unsigned long timeDataUpdate;
 
 void handleUpdateData(){ // donnees a certains Hz
   
-  if((millis()-timeDataUpdate)*1.0>=1000.0/UPDATEDATAFREQUENCY){
+  if(fabs((millis()-timeDataUpdate)*1.0)>=1000.0/UPDATEDATAFREQUENCY){
     timeDataUpdate = millis();
   updateTemperature();
   }
@@ -335,6 +325,10 @@ void updateTemperature(){
           mainSystem.targetTemperature =minTemperatureConfig;
         }
 
+        if(isnan(mainSystem.targetTemperature)){
+          mainSystem.targetTemperature = 20.0;
+        }
+
       break;
 
       case 1:
@@ -347,6 +341,10 @@ void updateTemperature(){
       if(mainSystem.epsTemperature <=minEpsConfig){
         mainSystem.epsTemperature = minEpsConfig;
       }
+
+          if(isnan(mainSystem.epsTemperature)){
+          mainSystem.epsTemperature = 1.0;
+        }
       break;
 
     }
